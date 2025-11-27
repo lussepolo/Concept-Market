@@ -31,7 +31,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, allocation, onAdjust
         {isInvested && (
           <div className="absolute bottom-0 left-0 right-0 bg-emerald-500/90 backdrop-blur-sm py-1 px-3 flex justify-between items-center">
              <span className="text-xs font-bold text-white uppercase tracking-wider">In Portfolio</span>
-             <span className="text-xs font-bold text-white">{allocation} coins</span>
+             <span className="text-xs font-bold text-white">{allocation} hours</span>
           </div>
         )}
       </div>
@@ -62,13 +62,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, allocation, onAdjust
           {/* Live Stats */}
           <div className="flex items-center justify-between text-sm pt-3 border-t border-slate-100">
              <div className="flex flex-col">
-               <span className="text-slate-400 text-xs font-medium">Total Raised</span>
+               <span className="text-slate-400 text-xs font-medium">Total Hours</span>
                <span className="font-semibold text-slate-700 flex items-center gap-1">
-                 {project.totalCoinsInvested} <TrendingUp size={12} className="text-emerald-500"/>
+                 {project.totalHoursInvested} <TrendingUp size={12} className="text-emerald-500"/>
                </span>
              </div>
              <div className="flex flex-col items-end">
-                <span className="text-slate-400 text-xs font-medium">Backers</span>
+                <span className="text-slate-400 text-xs font-medium">Supporters</span>
                 <span className="font-semibold text-slate-700">{project.investorCount}</span>
              </div>
           </div>
@@ -86,7 +86,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, allocation, onAdjust
               : 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed'
             }`}
         >
-          {isInvested ? 'Adjust Allocation' : canInvest ? 'Invest Coins' : 'Portfolio Full'}
+          {isInvested ? 'Adjust Allocation' : canInvest ? 'Invest Hours' : 'Portfolio Full'}
         </button>
       </div>
     </div>

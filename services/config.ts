@@ -1,16 +1,15 @@
 
-// Instructions:
-// 1. Copy the values from your Firebase Console (Project Settings > General > Your Apps)
-// 2. Paste them inside the quotes below.
+// Firebase Configuration for Concept Market
+// Project: concept-market-20e5a
 
-export const firebaseConfig: any = {
-  apiKey: "AIzaSyCHelBONW-eeGwQ1_EEd-Uygq4m72TwdzY",
-  authDomain: "concept-market-2025.firebaseapp.com",
-  projectId: "concept-market-2025",
-  storageBucket: "concept-market-2025.firebasestorage.app",
-  messagingSenderId: "597860736950",
-  appId: "1:597860736950:web:91ec584a7f94103a74ab17",
-  measurementId: "G-BCT71NM326"
+export const firebaseConfig = {
+  apiKey: "AIzaSyDuAQyzfzr1mSspajT48X516BqBAK9ALAw",
+  authDomain: "concept-market-20e5a.firebaseapp.com",
+  projectId: "concept-market-20e5a",
+  storageBucket: "concept-market-20e5a.firebasestorage.app",
+  messagingSenderId: "589768366742",
+  appId: "1:589768366742:web:2ca4c3a5b7c519ed9b00b7",
+  measurementId: "G-LSJMT2KJJL"
 };
 
 export const isConfigured = () => {

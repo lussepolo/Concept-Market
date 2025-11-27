@@ -98,7 +98,7 @@ export const seedProjects = (): Project[] => {
       mdp: item.mdp,
       team: team, 
       imageUrl: `https://picsum.photos/seed/${index + 150}/800/600`, // Deterministic seed for images
-      totalCoinsInvested: 0, // Reset to 0 for fairness
+      totalHoursInvested: 0, // Reset to 0 for fairness
       investorCount: 0
     };
   });

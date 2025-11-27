@@ -17,27 +17,28 @@ export interface Project {
   imageUrl: string;
   
   // Live Data
-  totalCoinsInvested: number;
+  totalHoursInvested: number;
   investorCount: number;
 }
 
 export interface Allocation {
   projectId: string;
-  coins: number;
+  hours: number;
 }
 
 export interface Family {
   id: string;
   accessCode: string; // The login credential
-  studentName: string; // e.g. "The Smith Family"
+  studentName: string; // e.g. "The Smith Family" - empty string means unclaimed
   allocations: Allocation[];
   hasFinishedVoting?: boolean;
+  claimedAt?: number; // Timestamp when family registered
 }
 
 export interface FamilyState {
   allocations: Allocation[];
-  remainingCoins: number;
+  remainingHours: number;
 }
 
 // Sort Options
-export type SortOption = 'popular' | 'name' | 'coins_high' | 'coins_low';
+export type SortOption = 'popular' | 'name' | 'hours_high' | 'hours_low';

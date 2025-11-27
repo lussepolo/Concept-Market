@@ -19,7 +19,7 @@ const STORAGE_KEY_PROJECTS = 'concept_market_projects';
 const STORAGE_KEY_FAMILIES = 'concept_market_families';
 const STORAGE_KEY_SESSION = 'concept_market_session_user';
 
-export const MAX_COINS = 100;
+export const MAX_HOURS = 24;
 export const MAX_PROJECTS = 5;
 
 // -- Helpers --
@@ -34,8 +34,14 @@ export const subscribeToProjects = (callback: (projects: Project[]) => void): ()
     const q = collection(db, 'projects');
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const projects: Project[] = [];
-      querySnapshot.forEach((doc) => {
-        projects.push(doc.data() as Project);
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        // Normalize old field names to new ones (backwards compatibility)
+        projects.push({
+          ...data,
+          totalHoursInvested: data.totalHoursInvested ?? data.totalCoinsInvested ?? 0,
+          investorCount: data.investorCount ?? 0
+        } as Project);
       });
       callback(projects);
     });
@@ -76,9 +82,15 @@ export const subscribeToFamily = (familyId: string, callback: (family: Family | 
   }
 
   if (isFirebaseReady()) {
-    const unsubscribe = onSnapshot(doc(db, "families", familyId), (doc) => {
-      if (doc.exists()) {
-        callback(doc.data() as Family);
+    const unsubscribe = onSnapshot(doc(db, "families", familyId), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        // Normalize old field names (coins -> hours)
+        const allocations = (data.allocations || []).map((a: any) => ({
+          projectId: a.projectId,
+          hours: a.hours ?? a.coins ?? 0
+        }));
+        callback({ ...data, allocations } as Family);
       } else {
         callback(null);
       }
@@ -235,9 +247,9 @@ export const resetSystem = async () => {
 
 // -- Core Logic --
 
-export const calculateRemainingCoins = (allocations: Allocation[]): number => {
-  const used = allocations.reduce((sum, a) => sum + a.coins, 0);
-  return MAX_COINS - used;
+export const calculateRemainingHours = (allocations: Allocation[]): number => {
+  const used = allocations.reduce((sum, a) => sum + a.hours, 0);
+  return MAX_HOURS - used;
 };
 
 export const updateFamilyAllocations = async (
@@ -256,18 +268,18 @@ export const updateFamilyAllocations = async (
     const family = fSnap.data() as Family;
     
     const oldAllocation = family.allocations.find(a => a.projectId === projectId);
-    const oldCoins = oldAllocation ? oldAllocation.coins : 0;
-    const delta = newAmount - oldCoins;
+    const oldHours = oldAllocation ? oldAllocation.hours : 0;
+    const delta = newAmount - oldHours;
 
     let newAllocations = [...family.allocations];
     if (oldAllocation) {
         if (newAmount > 0) {
-            newAllocations = family.allocations.map(a => a.projectId === projectId ? { ...a, coins: newAmount } : a);
+            newAllocations = family.allocations.map(a => a.projectId === projectId ? { ...a, hours: newAmount } : a);
         } else {
             newAllocations = family.allocations.filter(a => a.projectId !== projectId);
         }
     } else if (newAmount > 0) {
-        newAllocations.push({ projectId, coins: newAmount });
+        newAllocations.push({ projectId, hours: newAmount });
     }
 
     const batch = writeBatch(db);
@@ -276,11 +288,11 @@ export const updateFamilyAllocations = async (
     // Update project stats atomically
     // Determine investor count change
     let investorIncrement = 0;
-    if (oldCoins === 0 && newAmount > 0) investorIncrement = 1;
-    if (oldCoins > 0 && newAmount === 0) investorIncrement = -1;
+    if (oldHours === 0 && newAmount > 0) investorIncrement = 1;
+    if (oldHours > 0 && newAmount === 0) investorIncrement = -1;
 
     batch.update(projectRef, {
-        totalCoinsInvested: increment(delta),
+        totalHoursInvested: increment(delta),
         investorCount: increment(investorIncrement)
     });
 
@@ -299,19 +311,19 @@ export const updateFamilyAllocations = async (
     const family = families[familyIndex];
 
     const oldAlloc = (family.allocations || []).find(a => a.projectId === projectId);
-    const oldCoins = oldAlloc ? oldAlloc.coins : 0;
-    const delta = newAmount - oldCoins;
+    const oldHours = oldAlloc ? oldAlloc.hours : 0;
+    const delta = newAmount - oldHours;
 
     // Update Family
     let newAllocations = [...(family.allocations || [])];
     if (oldAlloc) {
       if (newAmount > 0) {
-        newAllocations = newAllocations.map(a => a.projectId === projectId ? { ...a, coins: newAmount } : a);
+        newAllocations = newAllocations.map(a => a.projectId === projectId ? { ...a, hours: newAmount } : a);
       } else {
         newAllocations = newAllocations.filter(a => a.projectId !== projectId);
       }
     } else if (newAmount > 0) {
-      newAllocations.push({ projectId, coins: newAmount });
+      newAllocations.push({ projectId, hours: newAmount });
     }
     families[familyIndex] = { ...family, allocations: newAllocations };
 
@@ -320,12 +332,12 @@ export const updateFamilyAllocations = async (
     if (projIndex > -1) {
       const p = projects[projIndex];
       let invCount = p.investorCount;
-      if (oldCoins === 0 && newAmount > 0) invCount++;
-      if (oldCoins > 0 && newAmount === 0) invCount--;
+      if (oldHours === 0 && newAmount > 0) invCount++;
+      if (oldHours > 0 && newAmount === 0) invCount--;
       
       projects[projIndex] = {
         ...p,
-        totalCoinsInvested: p.totalCoinsInvested + delta,
+        totalHoursInvested: p.totalHoursInvested + delta,
         investorCount: invCount
       };
     }
@@ -343,4 +355,140 @@ const generateAccessCode = (): string => {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
+};
+
+// Generate multiple unique codes for bulk creation
+export const generateBulkCodes = async (count: number): Promise<string[]> => {
+  const codes = new Set<string>();
+  
+  // Get existing codes to avoid duplicates
+  const existingFamilies = await getAllFamilies();
+  const existingCodes = new Set(existingFamilies.map(f => f.accessCode));
+  
+  while (codes.size < count) {
+    const code = generateAccessCode();
+    if (!existingCodes.has(code) && !codes.has(code)) {
+      codes.add(code);
+    }
+  }
+  
+  return Array.from(codes);
+};
+
+// Create unclaimed family slots (codes without names)
+export const createUnclaimedCodes = async (count: number): Promise<Family[]> => {
+  const codes = await generateBulkCodes(count);
+  const families: Family[] = codes.map((code, index) => ({
+    id: `fam_${Date.now()}_${index}`,
+    accessCode: code,
+    studentName: '', // Empty = unclaimed
+    allocations: []
+  }));
+
+  if (isFirebaseReady()) {
+    const batch = writeBatch(db);
+    families.forEach(f => {
+      const ref = doc(db, 'families', f.id);
+      batch.set(ref, f);
+    });
+    await batch.commit();
+    console.log(`Created ${count} unclaimed codes in Firebase`);
+  } else {
+    const existing = await getAllFamilies();
+    const all = [...existing, ...families];
+    localStorage.setItem(STORAGE_KEY_FAMILIES, JSON.stringify(all));
+    window.dispatchEvent(new Event('local-data-update'));
+  }
+
+  return families;
+};
+
+// Delete a family
+export const deleteFamily = async (familyId: string): Promise<boolean> => {
+  if (isFirebaseReady()) {
+    try {
+      const familyRef = doc(db, 'families', familyId);
+      const fSnap = await getDoc(familyRef);
+      
+      if (!fSnap.exists()) return false;
+      
+      const family = fSnap.data() as Family;
+      const batch = writeBatch(db);
+      
+      // Remove family's hours from projects
+      for (const alloc of family.allocations || []) {
+        const projectRef = doc(db, 'projects', alloc.projectId);
+        batch.update(projectRef, {
+          totalHoursInvested: increment(-alloc.hours),
+          investorCount: increment(-1)
+        });
+      }
+      
+      // Delete the family document
+      batch.delete(familyRef);
+      await batch.commit();
+      
+      return true;
+    } catch (e) {
+      console.error('Error deleting family:', e);
+      return false;
+    }
+  } else {
+    // Local storage
+    const existingF = localStorage.getItem(STORAGE_KEY_FAMILIES);
+    const existingP = localStorage.getItem(STORAGE_KEY_PROJECTS);
+    
+    let families: Family[] = existingF ? JSON.parse(existingF) : [];
+    let projects: Project[] = existingP ? JSON.parse(existingP) : [];
+    
+    const family = families.find(f => f.id === familyId);
+    if (!family) return false;
+    
+    // Remove hours from projects
+    for (const alloc of family.allocations || []) {
+      const projIndex = projects.findIndex(p => p.id === alloc.projectId);
+      if (projIndex > -1) {
+        projects[projIndex] = {
+          ...projects[projIndex],
+          totalHoursInvested: projects[projIndex].totalHoursInvested - alloc.hours,
+          investorCount: projects[projIndex].investorCount - 1
+        };
+      }
+    }
+    
+    // Remove family
+    families = families.filter(f => f.id !== familyId);
+    
+    localStorage.setItem(STORAGE_KEY_FAMILIES, JSON.stringify(families));
+    localStorage.setItem(STORAGE_KEY_PROJECTS, JSON.stringify(projects));
+    window.dispatchEvent(new Event('local-data-update'));
+    
+    return true;
+  }
+};
+
+// Claim a code by adding family name
+export const claimCode = async (familyId: string, studentName: string): Promise<Family | null> => {
+  if (isFirebaseReady()) {
+    const familyRef = doc(db, 'families', familyId);
+    await updateDoc(familyRef, { 
+      studentName, 
+      claimedAt: Date.now() 
+    });
+    const updated = await getDoc(familyRef);
+    return updated.exists() ? updated.data() as Family : null;
+  } else {
+    const families = await getAllFamilies();
+    const index = families.findIndex(f => f.id === familyId);
+    if (index === -1) return null;
+    
+    families[index] = { 
+      ...families[index], 
+      studentName, 
+      claimedAt: Date.now() 
+    };
+    localStorage.setItem(STORAGE_KEY_FAMILIES, JSON.stringify(families));
+    window.dispatchEvent(new Event('local-data-update'));
+    return families[index];
+  }
 };

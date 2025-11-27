@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, RefreshCw, Key, ShieldAlert, LogOut, Download, Database } from 'lucide-react';
+import { Users, Plus, RefreshCw, Key, ShieldAlert, LogOut, Download, Database, Zap, Trash2 } from 'lucide-react';
 import { Family } from '../types';
 import * as storage from '../services/storage';
 import { isConfigured } from '../services/config';
@@ -11,7 +11,6 @@ interface AdminProps {
 
 const Admin: React.FC<AdminProps> = ({ onLogout }) => {
   const [families, setFamilies] = useState<Family[]>([]);
-  const [newFamilyName, setNewFamilyName] = useState('');
   const [loading, setLoading] = useState(false);
   const isLive = isConfigured();
   
@@ -23,16 +22,6 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
     setLoading(true);
     const data = await storage.getAllFamilies();
     setFamilies(data);
-    setLoading(false);
-  };
-
-  const handleCreateFamily = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newFamilyName.trim()) return;
-    setLoading(true);
-    await storage.createFamily(newFamilyName.trim());
-    setNewFamilyName('');
-    await loadFamilies();
     setLoading(false);
   };
 
@@ -54,11 +43,60 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
     }
   };
 
+  const handleGenerateCodes = async () => {
+    const countStr = prompt('How many codes to generate?', '350');
+    if (!countStr) return;
+    const count = parseInt(countStr);
+    if (isNaN(count) || count < 1 || count > 1000) {
+      alert('Please enter a valid number between 1 and 1000');
+      return;
+    }
+    if (confirm(`Generate ${count} new access codes? These will be unclaimed until families register.`)) {
+      setLoading(true);
+      await storage.createUnclaimedCodes(count);
+      await loadFamilies();
+      setLoading(false);
+      alert(`✅ Successfully created ${count} access codes!`);
+    }
+  };
+
+  const handleDeleteFamily = async (familyId: string, familyName: string) => {
+    if (confirm(`Are you sure you want to delete "${familyName || 'Unclaimed code'}"? This will also remove their hours from projects.`)) {
+      setLoading(true);
+      const success = await storage.deleteFamily(familyId);
+      if (success) {
+        await loadFamilies();
+      } else {
+        alert('Failed to delete family.');
+      }
+      setLoading(false);
+    }
+  };
+
+  const handleExportCodes = () => {
+    const unclaimedFamilies = families.filter(f => !f.studentName);
+    const claimedFamilies = families.filter(f => f.studentName);
+    
+    let csv = 'Access Code,Family Name,Status\n';
+    [...unclaimedFamilies, ...claimedFamilies].forEach(f => {
+      csv += `${f.accessCode},${f.studentName || ''},${f.studentName ? 'Claimed' : 'Available'}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `concept-market-codes-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const calculateStats = () => {
     const totalFamilies = families.length;
+    const claimedFamilies = families.filter(f => f.studentName).length;
     const activeFamilies = families.filter(f => f.allocations.length > 0).length;
-    const totalAllocated = families.reduce((sum, f) => sum + f.allocations.reduce((s, a) => s + a.coins, 0), 0);
-    return { totalFamilies, activeFamilies, totalAllocated };
+    const totalAllocated = families.reduce((sum, f) => sum + f.allocations.reduce((s, a) => s + a.hours, 0), 0);
+    return { totalFamilies, claimedFamilies, activeFamilies, totalAllocated };
   };
 
   const stats = calculateStats();
@@ -114,17 +152,21 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Total Families</div>
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Total Codes</div>
             <div className="text-3xl font-bold text-slate-900">{loading ? '...' : stats.totalFamilies}</div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Families Voted</div>
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Registered</div>
+            <div className="text-3xl font-bold text-blue-600">{loading ? '...' : stats.claimedFamilies}</div>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Have Voted</div>
             <div className="text-3xl font-bold text-emerald-600">{loading ? '...' : stats.activeFamilies}</div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Total Coins Invested</div>
+            <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Hours Invested</div>
             <div className="text-3xl font-bold text-indigo-600">{loading ? '...' : stats.totalAllocated}</div>
           </div>
         </div>
@@ -156,32 +198,49 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                       <th className="px-6 py-3">Access Code</th>
                       <th className="px-6 py-3">Status</th>
                       <th className="px-6 py-3 text-right">Allocation</th>
+                      <th className="px-6 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {families.map((family) => {
-                      const totalInvested = (family.allocations || []).reduce((a, b) => a + b.coins, 0);
+                      const totalInvested = (family.allocations || []).reduce((a, b) => a + b.hours, 0);
+                      const isClaimed = !!family.studentName;
                       return (
                         <tr key={family.id} className="hover:bg-slate-50 transition-colors">
-                          <td className="px-6 py-4 font-medium text-slate-900">{family.studentName}</td>
+                          <td className="px-6 py-4 font-medium text-slate-900">
+                            {family.studentName || <span className="text-slate-400 italic">Unclaimed</span>}
+                          </td>
                           <td className="px-6 py-4">
                             <code className="bg-slate-100 border border-slate-200 px-2 py-1 rounded text-slate-700 font-mono font-bold select-all">
                               {family.accessCode}
                             </code>
                           </td>
                           <td className="px-6 py-4">
-                            {totalInvested > 0 ? (
+                            {!isClaimed ? (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                Available
+                              </span>
+                            ) : totalInvested > 0 ? (
                               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                                Active
+                                Voted
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">
-                                Pending
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                Registered
                               </span>
                             )}
                           </td>
                           <td className="px-6 py-4 text-right font-medium text-slate-600">
-                            {totalInvested} / 100
+                            {totalInvested} / 24
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <button
+                              onClick={() => handleDeleteFamily(family.id, family.studentName)}
+                              className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </td>
                         </tr>
                       );
@@ -195,36 +254,37 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
           {/* Actions */}
           <div className="space-y-6">
             
-            {/* Create New */}
+            {/* Generate Codes */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <Plus size={18} className="text-emerald-500" /> Generate Login
+                <Zap size={18} className="text-amber-500" /> Bulk Code Generation
               </h3>
-              <form onSubmit={handleCreateFamily} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Family Name / ID</label>
-                  <input 
-                    type="text" 
-                    value={newFamilyName}
-                    onChange={(e) => setNewFamilyName(e.target.value)}
-                    placeholder="e.g. The Anderson Family"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  />
-                </div>
+              <p className="text-sm text-slate-500 mb-4">
+                Generate access codes that families will claim at registration time.
+              </p>
+              <button 
+                onClick={handleGenerateCodes}
+                disabled={loading}
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Zap size={16} />
+                {loading ? 'Generating...' : 'Generate Codes'}
+              </button>
+              <div className="mt-3 pt-3 border-t border-slate-100">
                 <button 
-                  type="submit"
-                  disabled={!newFamilyName.trim() || loading}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  onClick={handleExportCodes}
+                  disabled={families.length === 0}
+                  className="w-full text-sm text-slate-600 hover:text-slate-800 font-medium py-2 flex items-center justify-center gap-2"
                 >
-                  {loading ? 'Processing...' : 'Create & Generate Code'}
+                  <Download size={14} /> Export Codes to CSV
                 </button>
-              </form>
+              </div>
             </div>
 
             {/* System Controls */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <Key size={18} className="text-slate-400" /> Data Controls
+                <Database size={18} className="text-slate-400" /> Database Controls
               </h3>
               <div className="space-y-3">
                  <button 
@@ -232,18 +292,12 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                    disabled={loading}
                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium rounded-lg text-sm transition-colors border border-indigo-100"
                  >
-                   <Database size={16} /> Seed Database
+                   <Database size={16} /> Seed Projects (72)
                  </button>
-                 <p className="text-xs text-slate-400 text-center px-2 mb-2">
-                   Resets projects and adds default families.
+                 <p className="text-xs text-slate-400 text-center px-2">
+                   Uploads all student projects to the database.
                  </p>
-                 <hr className="border-slate-100 my-2" />
-                 <button 
-                   onClick={() => window.print()}
-                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition-colors"
-                 >
-                   <Download size={16} /> Print/Export Codes
-                 </button>
+                 <hr className="border-slate-100 my-3" />
                  <button 
                    onClick={handleReset}
                    disabled={loading}
@@ -251,6 +305,9 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                  >
                    <RefreshCw size={16} /> Full System Reset
                  </button>
+                 <p className="text-xs text-slate-400 text-center px-2">
+                   ⚠️ Clears all data and starts fresh.
+                 </p>
               </div>
             </div>
 

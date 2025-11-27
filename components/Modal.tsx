@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Minus, Plus, AlertCircle } from 'lucide-react';
 import { Project, Allocation } from '../types';
-import { MAX_COINS } from '../services/storage';
+import { MAX_HOURS } from '../services/storage';
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,13 +39,13 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleIncrement = () => {
     if (amount < maxAssignable) {
-      setAmount(prev => prev + 5); // Increment by 5 for UX
+      setAmount(prev => prev + 2); // Increment by 2
     }
   };
 
   const handleDecrement = () => {
-    if (amount >= 5) {
-      setAmount(prev => prev - 5);
+    if (amount >= 2) {
+      setAmount(prev => prev - 2);
     } else {
       setAmount(0);
     }
@@ -81,8 +81,8 @@ const Modal: React.FC<ModalProps> = ({
 
           <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-medium text-slate-500">Invested Amount</span>
-              <span className="text-2xl font-bold text-slate-900">{amount} <span className="text-sm text-slate-400 font-normal">coins</span></span>
+              <span className="text-sm font-medium text-slate-500">Allocated Hours</span>
+              <span className="text-2xl font-bold text-slate-900">{amount} <span className="text-sm text-slate-400 font-normal">hours</span></span>
             </div>
 
             <div className="flex items-center justify-between gap-4">
@@ -115,7 +115,7 @@ const Modal: React.FC<ModalProps> = ({
           <div className="flex items-start gap-2 p-3 bg-emerald-50 text-emerald-800 text-sm rounded-lg">
             <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
             <span>
-              You have <strong>{remainingBudget - (amount - currentAllocation)}</strong> coins remaining after this transaction.
+              You have <strong>{remainingBudget - (amount - currentAllocation)}</strong> hours remaining after this transaction.
             </span>
           </div>
 
