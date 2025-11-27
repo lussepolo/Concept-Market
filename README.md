@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 Concept Market
+# Concept Market
 
 ### A Real-Time Hour Allocation Platform for Student Projects
 
@@ -20,20 +20,20 @@
 
 **Concept Market** is an interactive platform designed for the **Festival of Learning** event. Families allocate "hours" to Middle School and High School student projects they want to support, creating a live, engaging voting experience.
 
-### ✨ Key Features
+### Key Features
 
 | Feature | Description |
 |---------|-------------|
-| 🕐 **Hour Allocation** | Each family receives 24 hours to distribute across up to 5 projects |
-| 📊 **Live Leaderboard** | Real-time ranking of projects by total hours received |
-| 🔐 **Code-Based Access** | Secure login with unique 6-character access codes |
-| 👨‍👩‍👧 **Self-Registration** | Families claim codes and register their own names |
-| 🛠️ **Admin Dashboard** | Generate codes, manage users, seed database, export CSV |
-| ⚡ **Real-Time Sync** | Powered by Firebase Firestore for instant updates |
+| **Hour Allocation** | Each family receives 24 hours to distribute across up to 5 projects |
+| **Live Leaderboard** | Real-time ranking of projects by total hours received |
+| **Code-Based Access** | Secure login with unique 6-character access codes |
+| **Self-Registration** | Families claim codes and register their own names |
+| **Admin Dashboard** | Generate codes, manage users, seed database, export CSV |
+| **Real-Time Sync** | Powered by Firebase Firestore for instant updates |
 
 ---
 
-## 🖼️ Screenshots
+## Screenshots
 
 <details>
 <summary>Click to view screenshots</summary>
@@ -54,7 +54,7 @@ Manage families, generate codes, and control the system.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -95,7 +95,7 @@ export const firebaseConfig = {
 
 ---
 
-## 📦 Deployment
+## Deployment
 
 ### Build for Production
 
@@ -115,7 +115,7 @@ npx firebase-tools deploy --only hosting --project your-project-id
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
@@ -126,7 +126,7 @@ Configure in `services/storage.ts`.
 
 ---
 
-## 👤 Usage
+## Usage
 
 ### For Families
 
@@ -145,7 +145,7 @@ Configure in `services/storage.ts`.
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ```
 ├── Frontend
@@ -166,7 +166,7 @@ Configure in `services/storage.ts`.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Concept-Market/
@@ -187,7 +187,7 @@ Concept-Market/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -199,13 +199,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built for the **Festival of Learning** event
 - Designed to showcase student innovation and creativity
