@@ -183,9 +183,12 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-bold">C</div>
-              <span className="hidden sm:block text-xl font-bold tracking-tight text-slate-900">Concept Market</span>
+            <div className="flex items-center gap-3">
+              <img src="/ConceptLogo.png" alt="Escola Concept" className="h-12 w-auto" />
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="h-7 w-px bg-slate-300" />
+                <span className="text-base font-bold tracking-tight text-slate-900">Concept Market</span>
+              </div>
             </div>
             <div className="hidden md:flex space-x-1">
               {[
