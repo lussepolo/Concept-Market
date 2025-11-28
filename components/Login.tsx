@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowRight, Lock, AlertCircle, User, CheckCircle, RefreshCw, Search, TrendingUp } from 'lucide-react';
+import { ArrowRight, Lock, CheckCircle, RefreshCw, Search, TrendingUp } from 'lucide-react';
 import { Family } from '../types';
 
 interface LoginProps {
@@ -77,46 +77,33 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
               <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full -translate-y-1/2 -translate-x-1/2" />
               <div className="absolute bottom-0 right-0 w-24 h-24 bg-slate-500/5 rounded-full translate-y-1/2 translate-x-1/2" />
               
-              <div className="relative">
-                {/* Brand */}
-                <div className="flex items-center gap-4 mb-8">
-                  <img src="/ConceptLogo.png" alt="Escola Concept" className="h-20 w-auto" />
-                  <div className="h-10 w-px bg-slate-300" />
-                  <span className="text-lg font-bold tracking-tight text-slate-900">Concept Market</span>
-                </div>
-              
+              <div className="relative flex flex-col justify-center h-full min-h-[450px]">
                 {step === 'code' ? (
                   // STEP 1: Enter Code
                   <>
-                    <div className="mb-6">
-                      <h1 className="text-3xl font-bold text-slate-900 mb-2">Investor Portal</h1>
-                      <p className="text-slate-600 text-lg">Enter your family access code to access your capital fund.</p>
+                    {/* Logo & Title */}
+                    <div className="flex flex-col items-center text-center mb-10">
+                      <img src="/ConceptLogo.png" alt="Escola Concept" className="h-36 w-auto mb-2" />
+                      <h1 className="text-3xl font-bold tracking-tight text-slate-900">Concept Market</h1>
+                      <p className="text-slate-500 mt-1">Investor Portal</p>
                     </div>
 
                     <form onSubmit={handleCodeSubmit} className="space-y-4">
-                      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm">
-                        <label htmlFor="accessCode" className="block text-sm font-medium text-slate-700 mb-2">Access Code</label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock size={18} className="text-slate-400" />
-                          </div>
-                          <input
-                            type="text"
-                            id="accessCode"
-                            value={code}
-                            onChange={(e) => setCode(e.target.value.toUpperCase())}
-                            placeholder="E.G. CMC2025"
-                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 font-mono uppercase tracking-wide placeholder-slate-400 bg-white focus:bg-white"
-                            autoFocus
-                          />
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-600 mb-2 text-center">Access Code</label>
+                        <input
+                          type="text"
+                          id="accessCode"
+                          value={code}
+                          onChange={(e) => setCode(e.target.value.toUpperCase())}
+                          placeholder="ABC123"
+                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 font-mono uppercase tracking-widest placeholder-slate-300 bg-white text-xl text-center"
+                          autoFocus
+                        />
                       </div>
 
                       {error && (
-                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
-                          <AlertCircle size={16} className="flex-shrink-0" />
-                          {error}
-                        </div>
+                        <p className="text-center text-sm text-red-500">{error}</p>
                       )}
 
                       <button
@@ -134,52 +121,43 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                       </button>
                     </form>
                     
-                    <div className="mt-6 pt-6 border-t border-slate-200/50 text-center">
-                      <p className="text-sm text-slate-500">
-                        Authorized access only • Festival of Learning 2025
-                      </p>
-                    </div>
+                    <p className="text-center text-xs text-slate-400 mt-8">
+                      Festival of Learning 2025
+                    </p>
                   </>
                 ) : (
                   // STEP 2: Register Family Name
                   <>
-                    <div className="text-center mb-6">
-                      <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+                    {/* Success Header */}
+                    <div className="flex flex-col items-center text-center mb-8">
+                      <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30">
                         <CheckCircle size={32} className="text-white" />
                       </div>
-                      <h1 className="text-3xl font-bold text-slate-900 mb-2">Code Verified!</h1>
-                      <p className="text-slate-600 text-lg">Now, let's set up your family profile.</p>
+                      <h1 className="text-2xl font-bold text-slate-900">Code Verified!</h1>
+                      <p className="text-slate-500 mt-1">One more step to get started</p>
                     </div>
 
-                    <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 mb-6 flex items-center justify-between border border-white shadow-sm">
-                      <span className="text-sm text-slate-500">Your Code</span>
-                      <span className="font-mono font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-lg">{pendingFamily?.accessCode}</span>
+                    <div className="bg-emerald-50 rounded-xl p-3 mb-6 flex items-center justify-center gap-2">
+                      <Lock size={14} className="text-emerald-600" />
+                      <span className="font-mono font-bold text-emerald-700 tracking-wider">{pendingFamily?.accessCode}</span>
                     </div>
 
                     <form onSubmit={handleRegistrationSubmit} className="space-y-4">
-                      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm">
-                        <label htmlFor="familyName" className="block text-sm font-medium text-slate-700 mb-2">Family Name</label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User size={18} className="text-slate-400" />
-                          </div>
-                          <input
-                            type="text"
-                            id="familyName"
-                            value={familyName}
-                            onChange={(e) => setFamilyName(e.target.value)}
-                            placeholder="e.g. The Smith Family"
-                            className="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 placeholder-slate-400 bg-white focus:bg-white"
-                            autoFocus
-                          />
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-600 mb-2 text-center">Family Name</label>
+                        <input
+                          type="text"
+                          id="familyName"
+                          value={familyName}
+                          onChange={(e) => setFamilyName(e.target.value)}
+                          placeholder="e.g. The Smith Family"
+                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 placeholder-slate-300 bg-white text-lg text-center"
+                          autoFocus
+                        />
                       </div>
 
                       {error && (
-                        <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
-                          <AlertCircle size={16} className="flex-shrink-0" />
-                          {error}
-                        </div>
+                        <p className="text-center text-sm text-red-500">{error}</p>
                       )}
 
                       <button
@@ -191,20 +169,18 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                           <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
                           <>
-                            Start Allocating <ArrowRight size={20} />
+                            Start Investing <ArrowRight size={20} />
                           </>
                         )}
                       </button>
                     </form>
                     
-                    <div className="mt-6 pt-6 border-t border-slate-200/50">
-                      <button 
-                        onClick={() => { setStep('code'); setError(''); setPendingFamily(null); }}
-                        className="text-sm text-slate-500 hover:text-emerald-600 w-full text-center transition-colors"
-                      >
-                        ← Use a different code
-                      </button>
-                    </div>
+                    <button 
+                      onClick={() => { setStep('code'); setError(''); setPendingFamily(null); }}
+                      className="text-sm text-slate-400 hover:text-emerald-600 w-full text-center mt-6 transition-colors"
+                    >
+                      ← Use different code
+                    </button>
                   </>
                 )}
               </div>
@@ -221,24 +197,24 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
               <div className="relative">
                 <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  Festival of Learning 2025
+                  Passion Project
                 </div>
                 
-                <h2 className="text-3xl font-bold text-slate-900 mb-3">Become an Angel Investor</h2>
-                <p className="text-slate-600 mb-8 text-lg">
-                  Your family plays a crucial role in validating student innovation. Here is how it works:
+                <h2 className="text-3xl font-bold text-slate-900 mb-3">Angel Investment Opportunity</h2>
+                <p className="text-slate-600 mb-6">
+                  During the Festival of Learning, learners present projects reflecting research, prototyping, and impact. As families, you are invited to engage with this work not just as observers, but as <span className="font-semibold text-slate-800">evaluators</span>.
                 </p>
 
-                <div className="space-y-5">
+                <div className="space-y-4">
                   {/* Step 1 */}
                   <div className="flex gap-4 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex-shrink-0 w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
                       <RefreshCw size={22} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 mb-1">1. Activate your Fund</h3>
+                      <h3 className="font-bold text-slate-900 mb-1">Step 1: Be an Angel Investor</h3>
                       <p className="text-slate-600 text-sm">
-                        Use the code provided on your access card. Your family wallet is pre-loaded with <span className="font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded">24 Hours</span>.
+                        Upon arrival, use your unique access code to enter the Concept Market. You are managing a real investment fund.
                       </p>
                     </div>
                   </div>
@@ -249,9 +225,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                       <Search size={22} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 mb-1">2. Scout the Projects</h3>
+                      <h3 className="font-bold text-slate-900 mb-1">Step 2: Understand the Value</h3>
                       <p className="text-slate-600 text-sm">
-                        Explore the <span className="font-bold">72 student projects</span>. Talk to the teams, ask about their MDP, and assess their potential.
+                        Your family receives <span className="font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded">24 Concept Hours</span>. Each hour represents one hour of your time you are willing to invest in supporting a project.
                       </p>
                     </div>
                   </div>
@@ -262,9 +238,9 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                       <TrendingUp size={22} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 mb-1">3. Allocate Capital</h3>
+                      <h3 className="font-bold text-slate-900 mb-1">Step 3: Invest Strategically</h3>
                       <p className="text-slate-600 text-sm">
-                        Invest your hours in up to <span className="font-bold">5 projects</span>. Your "investment" is real-time feedback that helps students understand the market value of their ideas.
+                        You may invest in up to <span className="font-bold">5 projects</span>. This encourages thoughtful assessment and selective decision-making.
                       </p>
                     </div>
                   </div>
