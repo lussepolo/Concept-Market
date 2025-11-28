@@ -108,7 +108,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
       <div className="bg-slate-900 text-white py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center font-bold text-xl">
+            <div className="w-10 h-10 bg-concept-500 rounded-lg flex items-center justify-center font-bold text-xl">
               A
             </div>
             <div>
@@ -129,11 +129,11 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
         
         {/* Environment Status Banner */}
         {isLive ? (
-           <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
-             <Database className="text-emerald-600 mt-0.5 flex-shrink-0" size={20} />
+           <div className="bg-concept-50 border border-concept-200 rounded-xl p-4 flex items-start gap-3">
+             <Database className="text-concept-600 mt-0.5 flex-shrink-0" size={20} />
              <div>
-               <h3 className="font-bold text-emerald-900 text-sm">Live Cloud Mode (Firebase)</h3>
-               <p className="text-emerald-700 text-sm mt-1">
+               <h3 className="font-bold text-concept-900 text-sm">Live Cloud Mode (Firebase)</h3>
+               <p className="text-concept-700 text-sm mt-1">
                  You are connected to the global database. Changes here affect all users immediately.
                </p>
              </div>
@@ -163,7 +163,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Have Voted</div>
-            <div className="text-3xl font-bold text-emerald-600">{loading ? '...' : stats.activeFamilies}</div>
+            <div className="text-3xl font-bold text-concept-600">{loading ? '...' : stats.activeFamilies}</div>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Hours Invested</div>
@@ -221,7 +221,7 @@ const Admin: React.FC<AdminProps> = ({ onLogout }) => {
                                 Available
                               </span>
                             ) : totalInvested > 0 ? (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-concept-100 text-concept-800">
                                 Voted
                               </span>
                             ) : (

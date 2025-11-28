@@ -89,7 +89,7 @@ const Modal: React.FC<ModalProps> = ({
               <button 
                 onClick={handleDecrement}
                 disabled={amount === 0}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 hover:border-emerald-500 hover:text-emerald-600 disabled:opacity-50 disabled:hover:border-slate-200 transition-all"
+                className="w-12 h-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 hover:border-concept-500 hover:text-concept-600 disabled:opacity-50 disabled:hover:border-slate-200 transition-all"
               >
                 <Minus size={20} />
               </button>
@@ -97,7 +97,7 @@ const Modal: React.FC<ModalProps> = ({
               <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
                  {/* Visual representation of 100 coins max */}
                 <div 
-                  className="h-full bg-emerald-500 transition-all duration-300 ease-out"
+                  className="h-full bg-concept-500 transition-all duration-300 ease-out"
                   style={{ width: `${amount}%` }}
                 />
               </div>
@@ -105,14 +105,14 @@ const Modal: React.FC<ModalProps> = ({
               <button 
                 onClick={handleIncrement}
                 disabled={amount >= maxAssignable}
-                className="w-12 h-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 hover:border-emerald-500 hover:text-emerald-600 disabled:opacity-50 disabled:hover:border-slate-200 transition-all"
+                className="w-12 h-12 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 hover:border-concept-500 hover:text-concept-600 disabled:opacity-50 disabled:hover:border-slate-200 transition-all"
               >
                 <Plus size={20} />
               </button>
             </div>
           </div>
 
-          <div className="flex items-start gap-2 p-3 bg-emerald-50 text-emerald-800 text-sm rounded-lg">
+          <div className="flex items-start gap-2 p-3 bg-concept-50 text-concept-800 text-sm rounded-lg">
             <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
             <span>
               You have <strong>{remainingBudget - (amount - currentAllocation)}</strong> hours remaining after this transaction.
@@ -131,7 +131,7 @@ const Modal: React.FC<ModalProps> = ({
           </button>
           <button 
             onClick={handleSave}
-            className="px-6 py-2 bg-emerald-500 text-white font-medium rounded-lg shadow-sm hover:bg-emerald-600 active:scale-95 transition-all"
+            className="px-6 py-2 bg-concept-500 text-white font-medium rounded-lg shadow-sm hover:bg-concept-600 active:scale-95 transition-all"
           >
             Confirm Allocation
           </button>

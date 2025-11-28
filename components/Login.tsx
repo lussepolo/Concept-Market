@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
             {/* Card */}
             <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl shadow-xl border border-slate-200 p-8 h-full overflow-hidden">
               {/* Decorative elements */}
-              <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full -translate-y-1/2 -translate-x-1/2" />
+              <div className="absolute top-0 left-0 w-32 h-32 bg-concept-500/5 rounded-full -translate-y-1/2 -translate-x-1/2" />
               <div className="absolute bottom-0 right-0 w-24 h-24 bg-slate-500/5 rounded-full translate-y-1/2 translate-x-1/2" />
               
               <div className="relative flex flex-col justify-center h-full min-h-[450px]">
@@ -97,7 +97,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                           value={code}
                           onChange={(e) => setCode(e.target.value.toUpperCase())}
                           placeholder="ABC123"
-                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 font-mono uppercase tracking-widest placeholder-slate-300 bg-white text-xl text-center"
+                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-concept-500 focus:border-concept-500 transition-all text-slate-900 font-mono uppercase tracking-widest placeholder-slate-300 bg-white text-xl text-center"
                           autoFocus
                         />
                       </div>
@@ -109,7 +109,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                       <button
                         type="submit"
                         disabled={loading || !code}
-                        className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-4 rounded-xl transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 text-lg"
+                        className="w-full flex items-center justify-center gap-2 bg-concept-500 hover:bg-concept-600 text-white font-semibold py-4 px-4 rounded-xl transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-concept-500/30 text-lg"
                       >
                         {loading ? (
                           <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -130,16 +130,16 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                   <>
                     {/* Success Header */}
                     <div className="flex flex-col items-center text-center mb-8">
-                      <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30">
+                      <div className="w-16 h-16 bg-concept-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-concept-500/30">
                         <CheckCircle size={32} className="text-white" />
                       </div>
                       <h1 className="text-2xl font-bold text-slate-900">Code Verified!</h1>
                       <p className="text-slate-500 mt-1">One more step to get started</p>
                     </div>
 
-                    <div className="bg-emerald-50 rounded-xl p-3 mb-6 flex items-center justify-center gap-2">
-                      <Lock size={14} className="text-emerald-600" />
-                      <span className="font-mono font-bold text-emerald-700 tracking-wider">{pendingFamily?.accessCode}</span>
+                    <div className="bg-concept-50 rounded-xl p-3 mb-6 flex items-center justify-center gap-2">
+                      <Lock size={14} className="text-concept-600" />
+                      <span className="font-mono font-bold text-concept-700 tracking-wider">{pendingFamily?.accessCode}</span>
                     </div>
 
                     <form onSubmit={handleRegistrationSubmit} className="space-y-4">
@@ -151,7 +151,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                           value={familyName}
                           onChange={(e) => setFamilyName(e.target.value)}
                           placeholder="e.g. The Smith Family"
-                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-slate-900 placeholder-slate-300 bg-white text-lg text-center"
+                          className="block w-full px-4 py-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-concept-500 focus:border-concept-500 transition-all text-slate-900 placeholder-slate-300 bg-white text-lg text-center"
                           autoFocus
                         />
                       </div>
@@ -163,7 +163,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                       <button
                         type="submit"
                         disabled={loading || !familyName.trim()}
-                        className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-4 rounded-xl transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 text-lg"
+                        className="w-full flex items-center justify-center gap-2 bg-concept-500 hover:bg-concept-600 text-white font-semibold py-4 px-4 rounded-xl transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-concept-500/30 text-lg"
                       >
                         {loading ? (
                           <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -177,7 +177,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                     
                     <button 
                       onClick={() => { setStep('code'); setError(''); setPendingFamily(null); }}
-                      className="text-sm text-slate-400 hover:text-emerald-600 w-full text-center mt-6 transition-colors"
+                      className="text-sm text-slate-400 hover:text-concept-600 w-full text-center mt-6 transition-colors"
                     >
                       ← Use different code
                     </button>
@@ -189,14 +189,14 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
 
           {/* Right Side - Instructions Panel */}
           <div className="w-full lg:w-1/2">
-            <div className="relative bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-xl border border-emerald-200 p-8 h-full overflow-hidden">
+            <div className="relative bg-gradient-to-br from-concept-50 to-concept-50 rounded-2xl shadow-xl border border-concept-200 p-8 h-full overflow-hidden">
               {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-teal-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-concept-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-concept-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
               
               <div className="relative">
-                <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 bg-concept-500/10 text-concept-700 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                  <span className="w-2 h-2 bg-concept-500 rounded-full animate-pulse" />
                   Passion Project
                 </div>
                 
@@ -208,7 +208,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
                 <div className="space-y-4">
                   {/* Step 1 */}
                   <div className="flex gap-4 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex-shrink-0 w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <div className="flex-shrink-0 w-12 h-12 bg-concept-500 rounded-xl flex items-center justify-center shadow-lg shadow-concept-500/30">
                       <RefreshCw size={22} className="text-white" />
                     </div>
                     <div>
@@ -221,20 +221,20 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
 
                   {/* Step 2 */}
                   <div className="flex gap-4 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex-shrink-0 w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <div className="flex-shrink-0 w-12 h-12 bg-concept-500 rounded-xl flex items-center justify-center shadow-lg shadow-concept-500/30">
                       <Search size={22} className="text-white" />
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900 mb-1">Step 2: Understand the Value</h3>
                       <p className="text-slate-600 text-sm">
-                        Your family receives <span className="font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded">24 Concept Hours</span>. Each hour represents one hour of your time you are willing to invest in supporting a project.
+                        Your family receives <span className="font-bold text-concept-600 bg-concept-100 px-1.5 py-0.5 rounded">24 Concept Hours</span>. Each hour represents one hour of your time you are willing to invest in supporting a project.
                       </p>
                     </div>
                   </div>
 
                   {/* Step 3 */}
                   <div className="flex gap-4 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex-shrink-0 w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <div className="flex-shrink-0 w-12 h-12 bg-concept-500 rounded-xl flex items-center justify-center shadow-lg shadow-concept-500/30">
                       <TrendingUp size={22} className="text-white" />
                     </div>
                     <div>

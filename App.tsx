@@ -167,7 +167,7 @@ export default function App() {
 
   // -- Render --
 
-  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" /></div>;
+  if (authLoading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-8 h-8 border-2 border-concept-500 border-t-transparent rounded-full animate-spin" /></div>;
   
   if (!currentUser) {
     return <Login onLogin={handleLogin} onClaimCode={handleClaimCode} />;
@@ -212,7 +212,7 @@ export default function App() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex flex-col items-end mr-2">
                <span className="text-xs font-medium text-slate-500">{currentUser.studentName}</span>
-               <span className={`text-sm font-bold ${remainingHours < 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+               <span className={`text-sm font-bold ${remainingHours < 0 ? 'text-red-500' : 'text-concept-600'}`}>
                  {remainingHours} / {storage.MAX_HOURS} hours
                </span>
             </div>
@@ -226,9 +226,9 @@ export default function App() {
         </div>
       </div>
       <div className="md:hidden border-t border-slate-100 flex justify-around p-2">
-          <button onClick={() => setView('market')} className={`p-2 rounded-md ${view === 'market' ? 'bg-slate-100 text-emerald-600' : 'text-slate-400'}`}><LayoutGrid size={20}/></button>
-          <button onClick={() => setView('portfolio')} className={`p-2 rounded-md ${view === 'portfolio' ? 'bg-slate-100 text-emerald-600' : 'text-slate-400'}`}><PieChart size={20}/></button>
-          <button onClick={() => setView('leaderboard')} className={`p-2 rounded-md ${view === 'leaderboard' ? 'bg-slate-100 text-emerald-600' : 'text-slate-400'}`}><TrendingUp size={20}/></button>
+          <button onClick={() => setView('market')} className={`p-2 rounded-md ${view === 'market' ? 'bg-slate-100 text-concept-600' : 'text-slate-400'}`}><LayoutGrid size={20}/></button>
+          <button onClick={() => setView('portfolio')} className={`p-2 rounded-md ${view === 'portfolio' ? 'bg-slate-100 text-concept-600' : 'text-slate-400'}`}><PieChart size={20}/></button>
+          <button onClick={() => setView('leaderboard')} className={`p-2 rounded-md ${view === 'leaderboard' ? 'bg-slate-100 text-concept-600' : 'text-slate-400'}`}><TrendingUp size={20}/></button>
       </div>
     </nav>
   );
@@ -255,9 +255,9 @@ export default function App() {
               <div className="text-slate-500 text-xs font-medium uppercase tracking-wider">Projects Live</div>
               <div className="text-2xl font-bold text-slate-900">{projects.length}</div>
             </div>
-            <div className="bg-emerald-50 border border-emerald-100 px-4 py-3 rounded-xl min-w-[120px]">
-              <div className="text-emerald-700 text-xs font-medium uppercase tracking-wider">Your Hours</div>
-              <div className="text-2xl font-bold text-emerald-700">{remainingHours}</div>
+            <div className="bg-concept-50 border border-concept-100 px-4 py-3 rounded-xl min-w-[120px]">
+              <div className="text-concept-700 text-xs font-medium uppercase tracking-wider">Your Hours</div>
+              <div className="text-2xl font-bold text-concept-700">{remainingHours}</div>
             </div>
           </div>
         </div>
@@ -265,14 +265,14 @@ export default function App() {
           <div className="mt-8 flex flex-col lg:flex-row gap-4 items-center">
              <div className="relative w-full lg:w-96 group">
                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                 <Search size={18} className="text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                 <Search size={18} className="text-slate-400 group-focus-within:text-concept-500 transition-colors" />
                </div>
                <input
                  type="text"
                  placeholder="Search projects, teams..."
                  value={searchQuery}
                  onChange={(e) => setSearchQuery(e.target.value)}
-                 className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg leading-5 bg-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 sm:text-sm transition-all shadow-sm"
+                 className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg leading-5 bg-white placeholder-slate-400 focus:outline-none focus:border-concept-500 focus:ring-1 focus:ring-concept-500 sm:text-sm transition-all shadow-sm"
                />
              </div>
              <div className="flex-1 w-full overflow-x-auto no-scrollbar flex gap-2 items-center">
@@ -280,7 +280,7 @@ export default function App() {
                <select 
                   value={selectedDivision} 
                   onChange={(e) => setSelectedDivision(e.target.value as any)}
-                  className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5"
+                  className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-concept-500 focus:border-concept-500 block p-2.5"
                >
                  <option value="All">All Divisions</option>
                  <option value={Division.MIDDLE_SCHOOL}>Middle School</option>
@@ -302,7 +302,7 @@ export default function App() {
                <select
                  value={sortBy}
                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                 className="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-2.5"
+                 className="w-full bg-white border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-concept-500 focus:border-concept-500 block p-2.5"
                >
                  <option value="popular">Most Popular</option>
                  <option value="hours_high">Most Hours</option>
@@ -333,13 +333,13 @@ export default function App() {
       if (index === 0) return 'bg-gradient-to-r from-yellow-400 to-yellow-500';
       if (index === 1) return 'bg-gradient-to-r from-slate-400 to-slate-500';
       if (index === 2) return 'bg-gradient-to-r from-amber-500 to-amber-600';
-      return 'bg-emerald-500';
+      return 'bg-concept-500';
     };
 
     return (
       <div className="max-w-4xl mx-auto mt-8 space-y-6">
         {/* Header Card */}
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl shadow-emerald-500/20">
+        <div className="bg-gradient-to-br from-concept-500 to-concept-600 rounded-2xl p-6 text-white shadow-xl shadow-concept-500/20">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -348,14 +348,14 @@ export default function App() {
                 </div>
                 <h2 className="text-2xl font-bold">Live Leaderboard</h2>
               </div>
-              <p className="text-emerald-100">Real-time ranking of projects by hours invested</p>
+              <p className="text-concept-100">Real-time ranking of projects by hours invested</p>
             </div>
             <div className="text-right">
               <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full text-sm">
-                <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+                <span className="w-2 h-2 bg-concept-200 rounded-full animate-pulse" />
                 Updating Live
               </div>
-              <p className="text-emerald-100 text-sm mt-2">{projects.length} projects competing</p>
+              <p className="text-concept-100 text-sm mt-2">{projects.length} projects competing</p>
             </div>
           </div>
         </div>
@@ -425,7 +425,7 @@ export default function App() {
                         <span className="text-xs text-slate-500">{project.team.slice(0, 2).join(', ')}</span>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <span className="font-bold text-emerald-600 text-lg">{project.totalHoursInvested}</span>
+                        <span className="font-bold text-concept-600 text-lg">{project.totalHoursInvested}</span>
                         <span className="text-xs text-slate-400 block">hours</span>
                       </div>
                     </div>
