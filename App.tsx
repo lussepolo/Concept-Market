@@ -177,8 +177,8 @@ export default function App() {
     return <Admin onLogout={handleLogout} />;
   }
 
-  // Navbar Component
-  const Navbar = () => (
+  // Navbar JSX (inline to avoid focus loss on re-render)
+  const navbarContent = (
     <nav className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -233,7 +233,7 @@ export default function App() {
     </nav>
   );
 
-  const Header = () => (
+  const headerContent = (
     <div className="bg-white border-b border-slate-200 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -319,38 +319,132 @@ export default function App() {
   const LeaderboardView = () => {
     const topProjects = [...projects].sort((a, b) => b.totalHoursInvested - a.totalHoursInvested).slice(0, 20);
     const maxHours = Math.max(...topProjects.map(p => p.totalHoursInvested), 1);
+    const top3 = topProjects.slice(0, 3);
+    const rest = topProjects.slice(3);
+    
+    const getMedalStyle = (index: number) => {
+      if (index === 0) return 'bg-gradient-to-br from-yellow-300 to-yellow-500 text-yellow-900 shadow-lg shadow-yellow-500/30';
+      if (index === 1) return 'bg-gradient-to-br from-slate-300 to-slate-400 text-slate-700 shadow-lg shadow-slate-400/30';
+      if (index === 2) return 'bg-gradient-to-br from-amber-500 to-amber-700 text-amber-100 shadow-lg shadow-amber-500/30';
+      return 'bg-slate-100 text-slate-500';
+    };
+
+    const getBarColor = (index: number) => {
+      if (index === 0) return 'bg-gradient-to-r from-yellow-400 to-yellow-500';
+      if (index === 1) return 'bg-gradient-to-r from-slate-400 to-slate-500';
+      if (index === 2) return 'bg-gradient-to-r from-amber-500 to-amber-600';
+      return 'bg-emerald-500';
+    };
+
     return (
-      <div className="max-w-4xl mx-auto mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-           <h3 className="font-bold text-slate-800 flex items-center gap-2">
-             <TrendingUp size={18} className="text-emerald-500"/> Top Projects by Hours
-           </h3>
-           <span className="text-xs text-slate-500">Updated Live</span>
-        </div>
-        <div className="divide-y divide-slate-100">
-          {topProjects.map((project, index) => (
-            <div key={project.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center gap-4">
-               <div className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center text-sm font-bold ${index < 3 ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-500'}`}>
-                 {index + 1}
-               </div>
-               <div className="flex-1 min-w-0">
-                 <div className="flex justify-between mb-1">
-                    <span className="font-semibold text-slate-900 truncate">{project.title}</span>
-                    <span className="font-bold text-emerald-600">{project.totalHoursInvested}</span>
-                 </div>
-                 <div className="w-full bg-slate-100 rounded-full h-2">
-                    <div 
-                      className="bg-emerald-500 h-2 rounded-full" 
-                      style={{ width: `${(project.totalHoursInvested / maxHours) * 100}%`}}
-                    />
-                 </div>
-                 <div className="mt-1 flex justify-between text-xs text-slate-500">
-                    <span>{project.theme}</span>
-                    <span>{project.investorCount} supporters</span>
-                 </div>
-               </div>
+      <div className="max-w-4xl mx-auto mt-8 space-y-6">
+        {/* Header Card */}
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl shadow-emerald-500/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <TrendingUp size={22} />
+                </div>
+                <h2 className="text-2xl font-bold">Live Leaderboard</h2>
+              </div>
+              <p className="text-emerald-100">Real-time ranking of projects by hours invested</p>
             </div>
-          ))}
+            <div className="text-right">
+              <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full text-sm">
+                <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+                Updating Live
+              </div>
+              <p className="text-emerald-100 text-sm mt-2">{projects.length} projects competing</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Top 3 Podium */}
+        {top3.length >= 3 && (
+          <div className="grid grid-cols-3 gap-4">
+            {/* 2nd Place */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 text-center transform hover:scale-[1.02] transition-transform">
+              <div className={`w-14 h-14 ${getMedalStyle(1)} rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-3`}>
+                2
+              </div>
+              <h3 className="font-bold text-slate-900 text-sm line-clamp-2 mb-2">{top3[1]?.title}</h3>
+              <div className="text-2xl font-bold text-slate-700">{top3[1]?.totalHoursInvested}</div>
+              <div className="text-xs text-slate-500">hours</div>
+              <div className="mt-3 flex justify-center gap-1">
+                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{top3[1]?.theme}</span>
+              </div>
+            </div>
+
+            {/* 1st Place */}
+            <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl border-2 border-yellow-200 p-5 text-center transform hover:scale-[1.02] transition-transform -mt-4 shadow-lg">
+              <div className="text-3xl mb-1">👑</div>
+              <div className={`w-16 h-16 ${getMedalStyle(0)} rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-3`}>
+                1
+              </div>
+              <h3 className="font-bold text-slate-900 text-base line-clamp-2 mb-2">{top3[0]?.title}</h3>
+              <div className="text-3xl font-bold text-yellow-600">{top3[0]?.totalHoursInvested}</div>
+              <div className="text-xs text-yellow-700">hours invested</div>
+              <div className="mt-3 flex justify-center gap-1">
+                <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full">{top3[0]?.investorCount} supporters</span>
+              </div>
+            </div>
+
+            {/* 3rd Place */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 text-center transform hover:scale-[1.02] transition-transform">
+              <div className={`w-14 h-14 ${getMedalStyle(2)} rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-3`}>
+                3
+              </div>
+              <h3 className="font-bold text-slate-900 text-sm line-clamp-2 mb-2">{top3[2]?.title}</h3>
+              <div className="text-2xl font-bold text-amber-700">{top3[2]?.totalHoursInvested}</div>
+              <div className="text-xs text-slate-500">hours</div>
+              <div className="mt-3 flex justify-center gap-1">
+                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{top3[2]?.theme}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Rest of Rankings */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+            <h3 className="font-bold text-slate-800">Rankings #4 - #{topProjects.length}</h3>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {rest.map((project, i) => {
+              const index = i + 3;
+              return (
+                <div key={project.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center gap-4 group">
+                  <div className="w-10 h-10 flex-shrink-0 rounded-xl bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-500 group-hover:bg-slate-200 transition-colors">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="min-w-0">
+                        <span className="font-semibold text-slate-900 block truncate">{project.title}</span>
+                        <span className="text-xs text-slate-500">{project.team.slice(0, 2).join(', ')}</span>
+                      </div>
+                      <div className="text-right flex-shrink-0 ml-4">
+                        <span className="font-bold text-emerald-600 text-lg">{project.totalHoursInvested}</span>
+                        <span className="text-xs text-slate-400 block">hours</span>
+                      </div>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                      <div 
+                        className={`${getBarColor(index)} h-2 rounded-full transition-all duration-500`}
+                        style={{ width: `${(project.totalHoursInvested / maxHours) * 100}%`}}
+                      />
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{project.theme}</span>
+                      <span className="text-xs text-slate-400">•</span>
+                      <span className="text-xs text-slate-500">{project.investorCount} supporters</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     )
@@ -358,8 +452,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <Navbar />
-      <Header />
+      {navbarContent}
+      {headerContent}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {view === 'leaderboard' ? (
           <LeaderboardView />
