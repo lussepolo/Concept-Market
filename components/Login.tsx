@@ -250,9 +250,14 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
           </div>
         </div>
         
-        <p className="text-center mt-8 text-sm text-slate-400">
-          © 2025 Concept Market • Festival of Learning
-        </p>
+        <div className="text-center mt-8">
+          <p className="text-sm text-slate-500">
+            Built with 💙 by <span className="font-semibold text-slate-700">Pedro Quartiero</span> • Grade 12 Legacy Project
+          </p>
+          <p className="text-xs text-slate-400 mt-1">
+            © 2025 Concept Market • Festival of Learning
+          </p>
+        </div>
 
       </div>
     </div>

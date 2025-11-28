@@ -496,6 +496,18 @@ export default function App() {
           onConfirm={handleAllocationConfirm}
         />
       )}
+      
+      {/* Footer */}
+      <footer className="mt-16 py-8 border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-slate-500 text-sm">
+            Built with 💙 by <span className="font-semibold text-slate-700">Pedro Quartiero</span> • Grade 12 Legacy Project
+          </p>
+          <p className="text-slate-400 text-xs mt-1">
+            Festival of Learning 2025 • Escola Concept
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
