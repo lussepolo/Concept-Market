@@ -504,7 +504,7 @@ export default function App() {
             Ideated by <span className="font-semibold text-slate-700">Escola Concept</span> • Developed by <span className="font-semibold text-slate-700">Pedro Quartiero</span>
           </p>
           <p className="text-slate-400 text-xs mt-1">
-            Grade 12 Legacy Project • Festival of Learning 2025
+            Project Design Journey • Festival of Learning 2025
           </p>
         </div>
       </footer>

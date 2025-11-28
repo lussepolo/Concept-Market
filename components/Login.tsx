@@ -255,7 +255,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClaimCode }) => {
             Ideated by <span className="font-semibold text-slate-700">Escola Concept</span> • Developed by <span className="font-semibold text-slate-700">Pedro Quartiero</span>
           </p>
           <p className="text-xs text-slate-400 mt-1">
-            Grade 12 Legacy Project • Festival of Learning 2025
+            Project Design Journey • Festival of Learning 2025
           </p>
         </div>
 
