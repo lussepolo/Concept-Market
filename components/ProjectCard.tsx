@@ -23,7 +23,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, allocation, onAdjust
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 flex gap-1.5">
+           {project.grade && (() => {
+             const gradeNum = parseInt(project.grade.replace(/\D/g, ''));
+             const gradeColors: { [key: number]: string } = {
+               6: 'bg-pink-500/90',
+               7: 'bg-purple-500/90',
+               8: 'bg-blue-500/90',
+               9: 'bg-teal-500/90',
+               10: 'bg-emerald-500/90',
+             };
+             return (
+               <span className={`px-2 py-1 rounded-md text-xs font-bold backdrop-blur-md text-white ${gradeColors[gradeNum] || 'bg-slate-700/90'}`}>
+                 G{gradeNum}
+               </span>
+             );
+           })()}
            <span className={`px-2.5 py-1 rounded-md text-xs font-medium backdrop-blur-md ${project.division === 'High School' ? 'bg-indigo-500/90 text-white' : 'bg-orange-500/90 text-white'}`}>
              {project.division === 'Middle School' ? 'MS' : 'HS'}
            </span>

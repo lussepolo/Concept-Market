@@ -39,6 +39,7 @@ export const subscribeToProjects = (callback: (projects: Project[]) => void): ()
         // Normalize old field names to new ones (backwards compatibility)
         projects.push({
           ...data,
+          grade: data.grade ?? '',
           totalHoursInvested: data.totalHoursInvested ?? data.totalCoinsInvested ?? 0,
           investorCount: data.investorCount ?? 0
         } as Project);

@@ -8,6 +8,7 @@ export interface Project {
   id: string;
   title: string;
   division: Division;
+  grade: string; // e.g. "6A", "9B", "10C"
   mentor: string;
   primaryArea: string; // Area of Knowledge
   theme: string; // Thematic Cluster
